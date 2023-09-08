@@ -18,4 +18,5 @@ def display(request,name):
             input_file.close()
             convert.main()                                                   #Function converts markdown file into html and outputs it into an output.txt file
             return render(request,"encyclopedia/display.html")
+    
     return render(request,"encyclopedia/error.html")
