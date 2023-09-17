@@ -1,0 +1,15 @@
+{% extends "encyclopedia/layout.html" %}
+{% block title %}
+    Encyclopedia
+{% endblock %}
+{% block body %}
+    <form method = "post" action = "{% url 'index' %}">
+        {% csrf_token %}
+        <input type = "hidden" name = "check" value = "1">
+        <label for="entry_title">Enter the title of the encyclopedia entry:</label>
+        <input type = "text" id = "entry_title" name = "title"><br>
+        <label for="contents">Enter the contents of the encyclopedia entry in markdown format:</label>
+        <textarea id = "contents" name="markdown" rows = "20" cols = "20"></textarea><br>
+        <button>Create entry</button>
+    </form>
+{% endblock %}

@@ -1,9 +1,15 @@
-from django.shortcuts import render
-
+from django.shortcuts import render,redirect
 from . import util
 from . import convert
-
+import random
 def index(request):
+    print(request.POST)
+    if request.method == "POST":                                    #First we check if Post data is sent through request. If this is the case, a new encyclopedia entry has been created which means that we have to add it to the encyclopedia list and then render the index page.
+        entry_title = request.POST["title"]
+        entry_contents = request.POST["markdown"]
+        util.save_entry(entry_title,entry_contents)
+        return redirect(display,entry_title)
+
     list=[]
     query_dict = request.GET      #Gets the get data that has been passed after searching through the searchbar
     query = query_dict.get("query")
@@ -32,6 +38,7 @@ def index(request):
     })
 
 def display(request,name):
+
     list=[]
     query_dict = request.GET      #Gets the get data that has been passed after searching through the searchbar
     query = query_dict.get("query")
@@ -64,8 +71,27 @@ def display(request,name):
             input_file.write(contents)                                                                  #Writing markdown content into input.txt
             input_file.close()
             convert.main()                                                   #Function converts markdown file into html and outputs it into an output.txt file
-            return render(request,"encyclopedia/display.html")   
+            return render(request,"encyclopedia/display.html",{
+                "title":name
+            })   
     return render(request,"encyclopedia/error.html")
 
-        
+def add(request):
+    return render(request,"encyclopedia/add.html")
 
+def edit(request):
+    if request.method == "POST":   
+        print(request.POST)           
+        name = request.POST["name"]                 #Receives the title of the page
+        print(name)
+    content = util.get_entry(name)
+    return render(request,"encyclopedia/edit.html",{
+        "contents":content,
+        "name":name
+    }
+    )
+
+def random_page(request):
+    entries = util.list_entries()
+    ele = random.choice(entries)
+    return redirect(display,ele)

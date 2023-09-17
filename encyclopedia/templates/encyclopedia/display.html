@@ -6,6 +6,11 @@
 
 {% block body %}
     {% include "encyclopedia/converted.html" %}
+    <form action = "{% url 'edit' %}" method="POST"> 
+        {% csrf_token %}
+        <input type = "hidden" name = "name" value = "{{title}}">
+        <button id = "edit">Edit markdown entry</button>
+    </form>
     {% block content %}
     
     {% endblock %}
